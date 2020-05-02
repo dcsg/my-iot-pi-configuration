@@ -1,0 +1,58 @@
+global:
+  checkNewVersion: true
+
+accessLog:
+  format: json
+
+serversTransport:
+  insecureSkipVerify: true
+
+log:
+  level: INFO
+
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  web:
+    address: :80
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    filename: "/etc/traefik/traefik.yml"
+
+## DYNAMIC CONFIGURATION
+http:
+  middlewares:
+    wssHeader:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+
+  routers:
+    homeassistant:
+      entryPoints:
+        - websecure
+        - web
+      tls: {}
+      rule: "Host(`homeassistant.ninho.lan`)"
+      service: homeassistant
+      middlewares:
+        - redirect-web-to-websecure@internal
+        - wssHeader
+
+  services:
+    homeassistant:
+      loadBalancer:
+        servers:
+          - url: "http://172.18.0.1:8123"
