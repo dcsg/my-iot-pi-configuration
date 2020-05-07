@@ -7,7 +7,7 @@ web_session_ttl: 720
 dns:
   bind_host: 0.0.0.0
   port: 53
-  statistics_interval: 1
+  statistics_interval: 30
   querylog_enabled: true
   querylog_interval: 1
   querylog_memsize: 0
@@ -30,13 +30,12 @@ dns:
   safebrowsing_block_host: standard-block.dns.adguard.com
   cache_size: 4194304
   upstream_dns:
-    - '[/ninho.lan/]10.10.10.14:53'
     - tls://dns.quad9.net
     - 9.9.9.9
     - 1.1.1.1
   filtering_enabled: true
   filters_update_interval: 1
-  parental_sensitivity: 13
+  parental_sensitivity: 0
   parental_enabled: true
   safesearch_enabled: true
   safebrowsing_enabled: true
@@ -44,7 +43,6 @@ dns:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  rewrites: []
   blocked_services:
     - mail_ru
 tls:
