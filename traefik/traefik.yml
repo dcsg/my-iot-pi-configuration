@@ -33,26 +33,16 @@ providers:
 
 ## DYNAMIC CONFIGURATION
 http:
-  middlewares:
-    wssHeader:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-
   routers:
     homeassistant:
       entryPoints:
-        - websecure
         - web
-      tls: {}
       rule: "Host(`homeassistant.ninho.lan`)"
       service: homeassistant
-      middlewares:
-        - redirect-web-to-websecure@internal
-        - wssHeader
 
   services:
     homeassistant:
       loadBalancer:
         servers:
           - url: "http://172.18.0.1:8123"
+        passHostHeader: false

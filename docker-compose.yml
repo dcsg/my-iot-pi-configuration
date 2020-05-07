@@ -46,11 +46,11 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.grafana.entrypoints=web,websecure
-      - traefik.http.routers.grafana.middlewares=redirect-web-to-websecure@internal
-      - traefik.http.routers.grafana.tls=true
+      - traefik.http.routers.grafana.entrypoints=web
       - traefik.http.routers.grafana.rule=Host(`grafana.${INTRA_DOMAIN}`)
       - traefik.http.services.grafana.loadbalancer.server.port=3000
+    dns:
+      - 10.10.10.14
 
   unifi-controller:
     image: linuxserver/unifi-controller:arm32v7-5.12.66-ls56
@@ -79,6 +79,10 @@ services:
       - traefik.http.routers.unifi-controller.rule=Host(`unifi-controller.${INTRA_DOMAIN}`)
       - traefik.http.services.unifi-controller.loadbalancer.server.port=8443
       - traefik.http.services.unifi-controller.loadbalancer.server.scheme=https
+    dns:
+      - 10.10.10.14
+      - 127.0.0.1
+      - 1.1.1.1
 
   adguard:
     image: adguard/adguardhome:armhf-v0.100.9
@@ -99,9 +103,7 @@ services:
       - 1.1.1.1
     labels:
       - traefik.enable=true
-      - traefik.http.routers.adguard-http.entrypoints=web,websecure
-      - traefik.http.routers.adguard-http.middlewares=redirect-web-to-websecure@internal
-      - traefik.http.routers.adguard-http.tls=true
+      - traefik.http.routers.adguard-http.entrypoints=web
       - traefik.http.routers.adguard-http.rule=Host(`adguard.${INTRA_DOMAIN}`)
       - traefik.http.services.adguard-http.loadbalancer.server.port=3000
 
@@ -123,9 +125,7 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik.entrypoints=web,websecure
-      - traefik.http.routers.traefik.middlewares=redirect-web-to-websecure@internal
-      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.entrypoints=web
       - traefik.http.routers.traefik.rule=Host(`traefik.${INTRA_DOMAIN}`)
       - traefik.http.services.traefik.loadbalancer.server.port=8080
 
